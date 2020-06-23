@@ -14,6 +14,34 @@
 \usepackage[backend=biber,style=authoryear-comp]{biblatex}
 \usepackage[a4paper, portrait, margin=1in]{geometry}
 \addbibresource{mybib_stable.bib}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+
+\lstset{style=mystyle}
 
 \setlength{\parindent}{4em}
 \setlength{\parskip}{1em}
@@ -104,6 +132,11 @@ Having laid out all these considerations as to WHY you might choose to sue a GIS
 Once we have the WHY and the WHERE, we need the WHAT and HOW: what specific steps and information do you need to set off on this project. This guide will examine the search for data and the specific steps for GIS analysis in great detail. However, two more factors can be brought into our project plan. The first is follows on from my lecture in Session 1, and that's the coordinate/projection system we are going to use. This will also be treated in some detail below, but regardless of which stage of GIS analysis you are in, this needs to be one of the first things thought about and decided upon. For now, we will put a pin in that as we search for the data we need and get our GIS work space set up for the first time. The second factor is something that comes with experience, and that's an early "sketch," of the steps we will need to take in our project. For example, I know looking at our research question, I'll essentially need to compare the areas of two vector files: the vector file describing the spatial footprint of the hazard, and the vector file describing the spatial distribution of the population. This operation is called an \textbf{Overlay} and can be accomplished with several different \textbf{Geoprocessing} tools, all with applicability in different situations. Like anything else, this forecasting of the tools needed to answer our questions only comes with practice. I'll share some more thoughts on this topic at the end of this document. However, for now, we are ready to begin our GIS journey. 
 
 \section{Downloading and Installing Software}
+
+% Can actually import code here:  \lstinputlisting[language=Octave]{BitXorMatrix.m}
+\begin{lstlisting}[language=Python]
+    import numpy as np
+\end{lstlisting}
 
 \section{Finding GIS Data}
 

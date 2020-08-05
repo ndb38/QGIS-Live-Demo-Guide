@@ -8,9 +8,13 @@
 \usepackage[version=4]{mhchem}
 \usepackage[T1]{fontenc}
 \usepackage{wrapfig}
-\usepackage[colorlinks,citecolor=blue,urlcolor=blue,linkcolor=blue, bookmarks=false,hypertexnames=true]{hyperref} 
-\usepackage[font=scriptsize,labelfont=bf]{caption}
-\usepackage{subcaption}
+\usepackage[colorlinks,allcolors = blue]{hyperref} 
+%\numberwithin{equation}{section}
+%\numberwithin{figure}{section}
+%\numberwithin{table}{section}
+
+%\usepackage[font=scriptsize,labelfont=bf]{caption}
+%\usepackage{subcaption}
 \usepackage[backend=biber,style=authoryear-comp]{biblatex}
 \usepackage[a4paper, portrait, margin=1in]{geometry}
 \addbibresource{mybib_stable.bib}
@@ -91,14 +95,14 @@ The following sections will summarize Exercise 1, providing pictures with step b
 
 The goal of this exercise to to familiarize users with the work flow of a typical GIS project.I wanted to show in (mostly) real time how you conceptualize a problem, find the data, set up the QGIS environment, conduct analyses, and export your desired output. I want this exercise to be both (1) an introduction to GIS project management and basic GIS analyses for users who may have never opened the program before, and (2) a refresher on basic GIS tasks, menus, and tools for more experienced users. \textbf{My hope is that whether you are a new or returning GIS user, you leave this workshop with a fuller appreciation of the functionality of GIS and the applications of GIS in geological research.} 
 
-Our research question for this exercise: \textbf{How many people are at risk to the different eruptive products of Guagua Pichincha Volcano, Ecuador (\href{fig:fig1}{Figure 1})?} I selected this question for a few reasons. The first reason is that, on the whole, this question is pretty easy to answer using GIS. This is because the datasets required are quite readily available, and require minimal manipulation to get in a use able form. However, the challenge of this project is the fact that it requires non-geological data which geologists are often loathe to find. It also takes place in an area of the world many people in the McGill SEG chapter may be unfamiliar with, and the metadata is even in another language! Further complicating things is that the geological information available is locked away in non-georeferenced datasets. So while this question is easy to address at a birds eye view, if you want to answer it \textbf{you need the a full appreciation of the core "GIS Toolkit," which is the goal of this course.}
-
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.8\textwidth]{Google Map Overview of GP and Quito.png}
     \label{fig:fig1}
     \caption{Screen shot of Guagua Pichincha, looking North with Quito, capitol city of Ecuador, dominating the lowlands to the East. Image taken from Google Maps on June 23rd, 2020. }
 \end{figure}
+
+Our research question for this exercise: \textbf{How many people are at risk to the different eruptive products of Guagua Pichincha Volcano, Ecuador (Figure \ref{fig:fig1})?} I selected this question for a few reasons. The first reason is that, on the whole, this question is pretty easy to answer using GIS. This is because the datasets required are quite readily available, and require minimal manipulation to get in a use able form. However, the challenge of this project is the fact that it requires non-geological data which geologists are often loathe to find. It also takes place in an area of the world many people in the McGill SEG chapter may be unfamiliar with, and the metadata is even in another language! Further complicating things is that the geological information available is locked away in non-georeferenced datasets. So while this question is easy to address at a birds eye view, if you want to answer it \textbf{you need the a full appreciation of the core "GIS Toolkit," which is the goal of this course.}
 
 \subsection{Transferable Skills}
 
@@ -133,12 +137,70 @@ Once we have the WHY and the WHERE, we need the WHAT and HOW: what specific step
 
 \section{Downloading and Installing Software}
 
+Our choice of software for this workshop is QGIS, formerly known as Quantum GIS. QGIS is one of the most popular open-source GIS platforms, developed by a large team of professional + volunteer software developers since 2002 through the Open Source Geospatial Foundation (OSGEO: \href{https://www.osgeo.org}{https://www.osgeo.org}. QGIS is packaged into disk installers that work on all operating systems. At the time of writing this, I am using QGIS 3.10.6-A Coru\~na - this is the current Long Term Release (LTR), which will be supplanted by QGIS 3.14-Pi sometime in the next 6 months (see Figure \ref{fig:fig2}). If you are on a Mac (like me) the download disk should show multiple installers after opening. These should be installed in the following order: (1) Python-3.8, (2) GDAL-3.1, and then (3) QGIS-3.10.6. Python and GDAL must be installed prior to QGIS - QGIS has dependencies that link to both of these programs. If you are uncomfortable updating Python at this stage (this will likely only affect avid programmers), I recommend following the isntrucitons from this \href{https://github.com/rafdouglas/qgis_desktop_docker}{older docker build of QGIS 3.4/3.6}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\textwidth]{Figure2_Downloads.png}
+    \label{fig:fig2}
+    \caption{Screen shot of QGIS download page for Mac. As mentioned in text, this guide is based on the LTR 3.10.6-A Coru\~na. See QGIS docs for more details on versions and installation process.}
+\end{figure}
+
+There have been some dependency problems with GDAL 3.1 and QGIS, both in my experience and as reported on the forums. These are likely to be cleared up soon after this guide is published. However, in the event they aren't, it might be wise to install \textit{conda} or \textit{pip} versions of GDAL in their own environments. Using the Terminal on Mac, type one of the following:
+
 % Can actually import code here:  \lstinputlisting[language=Octave]{BitXorMatrix.m}
 \begin{lstlisting}[language=Python]
-    import numpy as np
+    conda install -c conda-forge gdal 
+    #OR
+    pip install GDAL
 \end{lstlisting}
 
+One of the recommended installation steps is to fix the paths to GDAL and Python on your system. QGIS sometimes has trouble finding these directories, and by fixing these paths you make it easier for the program to find the right modules. Figure \ref{fig:fig3} shows a screenshot of the pathing needed; to get to this menu, click the dropdown menu title 'QGIS', and select Preferences > System. Under System there is a collapsible menu called "Environment. Here you can enter your paths. You want to select 'Prepend' for APPLY, and 'PATH' for Variable. Enter the paths as described here if you use Mac. The installer will likely have different pathing instructions for Windows and Linux systems, but the essence of these instructions are the same. 
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\textwidth]{Figure3_Environment_Paths.png}
+    \label{fig:fig3}
+    \caption{Environment Menu under QGIS > Preferences > System dropdowns. If you are a Mac user, copy these three Prepend paths to map your QGIS properly. Othrwise, you might experience Python errors at start up.}
+\end{figure}
+
+\subsection{Plugins}
+
+For this exercise, you will need the following plugins. These can be found in the main menu drop down (see Figure \ref{fig4}) under Plugins > Manage and Install Plugins. Notice how some plugins are marked as a "Core Plugin," with a cyan banner upon selecting. Long ago, these were standalone plugins, but have since been folded in as core features of QGIS. We will be using many of these core plugins as well:
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\textwidth]{FIgure4_Plugin_Menu.png}
+    \label{fig4}
+    \caption{My 'Manage Plugins' Menu. Notice how many more are enabled than you will need for this exercise; many of the plugins are useful but not to our current goals. Contact me if you have any questions about what some of these plugins do.}
+\end{figure}
+
+\begin{itemize}
+    \item \textbf{Quick Map Services}: Should be a core plugin now, but will allow you to upload base maps. Base maps don't have geographical information per se, but they work as a good "base layer" for any map.
+    \item \textbf{Globe Builder}: Useful plugin for larger scale maps, let's you create pseudo-3D spherical map projection centered on your data. Great for data visualization.
+    \item \textbf{Easy Custom Labeling}: One of the most useful plugins for map making. Allows for detailed and intuitive user control of labels. Labelling is a famously painful procedure in GIS software, and this is one of the best tools I've found to make my labels consistent and appealing.
+    \item \textbf{Memory Layer Saver}: If you are going to sue Easy Custom Labeling, I strongly recommend having this plugin enabled as well. Easy Custom Labeling outputs a unique data type, called a memory layer, that will disappear after a particular map session is over. Memory Layer Saver allows this layer to be saved and preserved for future sessions, guaranteeing map consistency as a project evolves.
+    \item \textbf{GroupStats}: Simple but incredibly intuitive, this plugin lets you calculate statistical features of vector layer attributes, and export the results to a CSV. For a mroe detailed overview of its functionality, see: \href{https://anitagraser.com/2013/02/02/group-stats-tutorial/}{https://anitagraser.com/2013/02/02/group-stats-tutorial/}
+\end{itemize}
+
+\subsection{.qgz: The Project File}
+
+Before moving on to the main part of this exercise, it's worth spending a moment to highlight the file structure that's going to be your home for all the fun analyses you are running: the Project file. This file type is essentially your container for every other file you are going to plot, analyze, combine, and map in the course of a GIS session. When you first open QGIS a blank project file is all you have the option to save. This file has the extension \textbf{.qgz}, and can be saved alongside your actual data files. Like other programs, you can take features of your project file, and save them as templates for future analyses if you like the way you structured a particular map. Two important aspects of a project file need to be made clear. First, a QGIS can only operate one project at a time; it's not possible at the moment to have multiple projects open like you would in Adobe Illustrator or Inkscape. Second, \textbf{saving a project file does not save your actual data, analysis, models, or maps.}. 
+
+This second point is critical, and is often confused by new users. To illustrate this problem, I'll pose a simple and very realistic scenario illustrating what I mean. Imagine: after doing some work and making a pleasing looking map, you will naturally hit the "Save" button in the upper left icon menu, exit out, and continue with your work. Weeks later, you will reopen QGIS and immediately be met by a scary menu, telling you that QGIS can't find your files! This situation will often be met by smattering of curses, and may lead to you redoing a lot of your work. So what went wrong? What probably happened is that in the ensuing weeks since you started your .qgz file, you did some reorganizing in your hard drive and moved some of the shape files or raster files used for your map to another folder. Unlike many other applications, your project file and its contents are linked together very loosely. What this means in practice is that when you save a project file, you are essentially saving 1) styles and colors you've sued to make your map 2)the order of appearance of different layers 3) the projection system used 4) other metadata, but crucially not the actual files themselves. Those files exist in a unique portion of your hard drive with their own file path, so when you moved those files to a nice, orderly sub-folder AFTER the creation of your initial project file, QGIS essentially "lost track" of the data. 
+
+All you need to do to fix this issue is to click on the files that are throwing an error, and find them in your hard drive (easier said than done when you come back to a project you haven't opened in six months!). The good thing about this setup is that even if you break, delete, or make a change you don't like to a project, the underlying data can still be saved. Given all this, I don't want you to leaver this section thinking that the lesson is here is not to avoid saving or caring about a project file. Rather, document for yourself where you've stored everything, and keep track of what changes are being made. The utility of a project file will become more apparent later on in this Exercise. For more information, see \url{https://docs.qgis.org/3.10/en/docs/user_manual/introduction/project_files.html}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\textwidth]{Figure 5.png}
+    \label{fig5}
+    \caption{Project file directory and options. This menu is from the "Properties," option, accessed from the "Project" drop-down in the main menu bar.}
+\end{figure}
+
 \section{Finding GIS Data}
+
+
 
 \section{Importing Data}
 

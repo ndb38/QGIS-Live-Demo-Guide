@@ -62,18 +62,18 @@
        \vspace*{1cm}
 
        \LARGE
-       \textbf{GIS For Dummies: Session 2 Live Demo Guide}
+       \textbf{GIS for Geoscientists: Session 2 Live Demo Guide}
        
        \Large
        \vspace{0.3cm}
-        GIS Workshop prepared for McGill University Society for Economic Geology Student Chapter
+        GIS Workshop originally prepared for McGill University Society for Economic Geology Student Chapter, June 2020
             
        \vspace{1.2cm}
        \textbf{Nicholas D. Barber}\\
        Department of Earth Science\\
        University of Cambridge\\
        United Kingdom\\
-       June 22nd, 2020
+       \today
             
        \vspace{0.8cm}
      
@@ -122,6 +122,10 @@ Based on these goals, Exercise 1 should impart several important skills that wil
   \item Styling Raster and Vector Data
   \item Visualizing Geographic Data
 \end{itemize}
+
+\subsection{How To Use This Guide}
+
+This guide is meant to accompany the live lectures and demonstration associated with the \textbf{GIS for Geoscientists workshop}. This workshop was first offered to the Student SEG Chapter at McGill University in June of 2020, and takes the form of four 2-hour interactive instructional sessions. In line with the Objectives and Skills I highlight above, this guide is meant to serve as a permanent reference for workshop attendees. This guide will not be a complete replacement for viewing and participating in the live workshop, but aims to provide an image-packed how-to for the beginner level skills we learned in Session 2. If this is your first time encountering the exercise because you missed the workshop, or you are a compete beginner with GIS, I recommend following the guide as is. I also recommend having the first and second workshop lecture open to supplement what you are working on. If you attended the workshop, or you are a proficient user who needs specific information about a particular task, feel free to move through the guide in your own order. The tasks don't need to be completed in the order laid out by me in all cases. Enjoy the guide, and let me (Nick) know if you have any questions or comments on GitHub! Happy GIS-ing!
 
 \section{Project Panning + GIS Motivation}
 
@@ -258,7 +262,42 @@ If you'd like to save some time, the ready-to-use files are available via the Gi
 
 \section{Importing Data}
 
+This first step in our GIS journey will be a good opportunity to introduce some key features of the software. Particularly, this step should familiarize you with some of the common layouts and processes you need to follow when accessing QGIS tools. Importing data may seem trivial, bit given the plethora of data types and scale we want to work with as geoscientists, it's essential we get this right! Before starting our import, \textbf{I should emphasize that this section, Section 7, and Section 8 can be worked through in any order your prefer.} I've ordered them in this way to make it easier for me to explain what to do in writing, but there is no reason you can't start by setting up your work space (Section 8), define a projection system (Section 7), and then import your data.  So follow Sections 6-8 in whatever order makes sense to you! See Figure 9 for a brief overview of the three Import functions we are going to use. 
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\textwidth]{Fig_9_Import_Menus.png}
+    \label{fig9}
+    \caption{Overview of import functions we will use tog et our data into QGIS. These tools can be accessed using either the left hand toolbar, or the "Layer" drop-down menu. (1) Vector Import (Section 6.1); (2) Raster Import (Section 6.2); (3) CSV/TXT File Import (Section 6.3)}
+\end{figure}
+
 \subsection{Vector}
+
+Vector data is one of the two main "staple" data formats used in QGIS, and all other GIS software. Following Menke's \textit{Discover QGIS 3.X: A Workbook for Classroom or Independent Study} (2019), vector data is "...a representation of the world using points, lines and polygons...data that has discrete boundaries." Most GIS operations, even advanced remote sensing algorithms, tend to involve some level of vector data to define the WHERE and the WHAT of the analysis being done. For us, most of this Exercise will involve manipulating vector data, and much of the data found in the "qgis" folder on the course website is vector data. Common vector data formats are the \textbf{Shapefile} (.shp) extension, which was designed for use with ESRI products but works just as well in QGIS. The other major vector data format that we will encounter is a \textbf{GeoPackage} (.gpkg), which is an SQLite Database file used widely in QGIS that comes with many advantages over traditional Shape Files. 
+
+There are two important features of vector data that need to be discussed before moving forward. The first is the file structure, which differs depending on whether you are using a .shp or .gpkg file. Regardless of which file format you use, vector data takes the form of up to seven independnt "files", which layer together in GIS software to represent the different features of the data. The features I am talking about are 1) actual spatial location (where on earth?) 2) projection system (where on earth in relation to what reference?) 3) geographic extent (what is the shape? area? size?), 4) geometry (point? line? polygon?) 5) metadata (glossary for key terms, references), and 6) attributes. \textbf{Vector attributes} are the feature we tend to be care about most when using vector data. Attributes are typically supporting data, that populate the points, lines, and polygons defining a vector file with additional data. If we are looking at a map of the UK, where vector data with a polygon geometry is used to map the counties of the UK. The Attributes of these counties may include population statistics, demographic data, or comments (e.g. does the country contain a national park?). Attributes are stored in the \textbf{attribute table}, which we will utilize many times times in this exercise. If you are using a .shp format vector file, you are actually importing the many different "context" files which stack together to produce a single Vector file as seen by QGIS. A Geopackage is a super-efficient container that doesn't have this confusing file structure, but instead uses SQL data base structures to relate these different features of vector data. QGIS is actively promoting the use of GeoPackages, to enable easier sharing of data and to enable a more logical and transparent file architecture. GeoPackages can also contain multiple discrete ShapeFile equivalents, making them powerful and easier to share GIS data storage tools 
+
+The other important vector data feature that differs greatly from its common counterpart, raster data, is the ability to create, append, and edit the geometry and records captured in a vector file. Much like a "shape" object in graphic design software's, QGIS lets you manually edit the spatial extent and shape of, say, a polygon defining the extent of a geological formation. More importantly, these editing tools can be used to define an "empty" vector files, and manually draw/add features where you know them to exist independently. The attributes can similarly be edited, deleted, and added to at will. This \textbf{Edting} feature will be used by us to bring the modeled extent of lahars in Quito out of the literature and into our real, interactive GIS environment. Also very powerfully, vector data, whether by shape, manual selection, or specific attributes, can be queried, filtered, and modified using a combination of custom QGIS expressions + Python code. Again, we will see how this works in great detail through the next two sessions. 
+
+After this much discussion to importing data, you mght imagine it's an arduous process. Sorry to be a let down, but it's quite easy. The trick is making sure you know what you are doing when it comes to Vector files. \textbf{After downloading the files we will use in this exercise, you import those files using the "Add Layer" feature.} DO NOT use "Create Layer," just above; this is a common beginner stumbling block (See Figure 9). But as you do this, you may ask yourself; what even is a layer? A \textbf{Layer} in QGIS is much like a Layer in Inkscape, ArcMap, Illustrator, or another other graphically oriented software. Essentially, a layer is a container linking data, spatial information, symbology (i.e., style) in a discrete object that is ordered in appearence (a layer ordered on top of another layer will be drawn on top in the Map Canvas), and \textit{unique to each project}. The uniqueness of Layers to each project was touched on in Section 4.1. We will have plenty of opportunity to familiarize ourselves with Layers and their features as we work through this exercise, so we will leave the discussion there for now. 
+
+The protocol for importing both a ShapeFile and a GeoPackage is displayed in Figures 10 and 11 respectively. For both options, select the dropdown "Layer" > "Add Layer," followed by your format of choice (see Figure 9 for reference; you can also use the sidebar import icons next to your browser). For Shapefiles, you will usually select the ellipsis next to the "Vector Dataset(s)" drop down, navigate to the location of your file with a .shp extension in your hardrive, and then select "Add." Despite the menu looking quite different, GeoPackages work much the same way. Select "New", navigate the the .gpkg file in your hard drive, and select the specific file you want to import from the drop down bar above "New." Like mentioned earlier, this drop-down bar is there in case your GeoPackage contains more than one discrete vector file, allowing you to choose which specific features to import. 
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.8\textwidth]{Fig_10_Vector.png}
+    \label{fig10}
+    \caption{Simple file import window for Vector Data. usually you will sue this menu (Option 1 in Blue in Figure 9) if you are using .shp vector data formats. As you may be able to tell, whole directories and databases of vector data can be imported if you select one of the other "Source Types." For our purposes, the "File" type is what we should be using. }
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.8\textwidth]{Fig_11_Geopackage.png}
+    \label{fig11}
+    \caption{GeoPackage Import menu. Because GeoPackage's are technically SQL Database structure, the import menu resembles a database connection (if you have experience with databases). Follow the protocol in the the text to import the files you want out of your .gpkg file.}
+\end{figure}
+
+For more details: \url{https://docs.qgis.org/3.10/en/docs/training_manual/basic_map/vector_data.html}
 
 \subsection{Raster}
 

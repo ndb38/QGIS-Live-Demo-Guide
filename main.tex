@@ -62,11 +62,11 @@
        \vspace*{1cm}
 
        \LARGE
-       \textbf{GIS for Geoscientists: Session 2 Live Demo Guide}
+       \textbf{GIS for Geoscientists: Live Demo Guide}
        
        \Large
        \vspace{0.3cm}
-        GIS Workshop originally prepared for McGill University Society for Economic Geology Student Chapter, June 2020
+        Companion exercise guides for the GIS for Geoscientists Workshop Series. Originally prepared for McGill University in June of 2020. 
             
        \vspace{1.2cm}
        \textbf{Nicholas D. Barber}\\
@@ -316,7 +316,11 @@ This storage issue leads us naturally to the importance of raster visualization.
 
 \subsection{CSV}
 
-Example using 
+One of the most common questions I get regarding GIS' use with geological data is how to import spreadsheet based data into a map. Very often, these datasets have latitude and longitude coordinates, but it's not straightforward at first glance how to make a CSV file GIS useable. In terms of data input, I'd wager that a new GIS user will find importing CSVs the most tedious of the input processes, as you shall soon see. However, the process starts simply enough. Following Figure 9, we select "Add Delimited Text Layer" from either the "Layer" dropdown or the Side Panel (magenta \#3 in Figure 9). 
+
+The import menu that appears is much more feature rich than the previous menus in Figure 10-12, and the tool is customizable depending on what kind of text file you are trying to add. Like all the other tools, you'll want to select the ellipsis dropwdown in the upper right, navigate to the file in your hard drive, and select it. Once you do this, you need to tell QGIS what kind of file you are trying to import in the "File format," box. For convenience, it's best to make whatever text file you have into a CSV \textit{if you can.} Where you can't do this, the option for regular or custom delimiters gives you lots of flexibility for dealing with more challenging outputs. Like many other programs, QGIS doesn't handle non Unicode characters and long strings of text well; if you don't clean your CSV file prior to adding it to QGIS, the import may not succeed. 
+
+Next, you should carefully select relevant options in the "Record and Fields Options," box. You can mouse over these options to get more information about what each one does, but I will explain each option here. The first option is a numerical selector, which lets you specify the number of rows at the top of the file that QGIS will ignore when importing. This is an essential parameter to specify; if you have some generally empty rows at the beginning of a spreadsheet that contain a title or author list, make sure the skip those with this feature (note that the rows don;t get deleted form the original file; they just get skipped on import). If you've skipped the mostly empty rows, you should be able to check the option "First row has field names." This option let's the fields in your (likely vector) spreadsheet share the name of attribute fields used in calculations on the map.  I'd recommend this option be checked unless you have a good reason. The next option, "Detect Field Types," should always be checked. Attribute fields can have a variety of unique formats, and the format you use dictates what calculations can be done with a field. The three options in the right hand column (Figure 13) should only be checked where circumstances require. For European users, you may want to let QGIS know you are using the comma decimal system by checking "Decimal separator is comma." This will prevent QGIS from misreading the field values, as it used the period decimal system by default. You should only Trim fields if they are irregularly long or contain extra spaces; generally I would advise beginners not check this option. Finally, unless you have a good reason for it, I'd avoid discarding empty fields. Sometimes the lack of a value is an important signal! But that choice depends on your data, and the goals of your analysis. 
 
 \begin{figure}[htbp]
     \centering
@@ -324,6 +328,26 @@ Example using
     \label{fig13}
     \caption{Delimited text file import menu. Tables of CSV, TXT, Tab-separated, and most other spreadsheet formats can be read into QGIS and have a spatial dimension given to them using this menu. Details of menu options explained in text.}
 \end{figure}
+
+The final box asks you to define the geometry of the text file. What you select here is going to be very file dependent - we will deal with two different variants of text file throughout these exercises. The first one we will encounter will use the "Point Coordinates," option. Selecting this allows you to specify fields from the text file that define the latitude (Y field) and longitude (X field) of the data. This even allows you to specify a Z field (if you have elevation information). You then select a \textbf{coordinate reference system} (CRS) that these Lat/Long points are taken in relation to. \textbf{If you don't know what CRS your data is based on, it's always safe to select EPSG 4326 - WGS 84.} This will be discussed in more detail in the next section.  The second geometry option we will use is the "No Geometry," option. This is very common with older data, where an author will produce a table with sample site labels and chemical measurements, forgetting to manually record the latitude/longitude coordinates of the different sample sites.  We will use a table taken from a study on the hydrogeochemistry of Guagua Pichincha to illustrate how this data can still be given a spatial scope. The final Geometry definition option is the Well Known Text (WKT): a table format that may commonly come out of supporting geospatial libraries like GeoPandas for python. These tables will have specific "geometry," fields, and b selecting WKT you need to point QGIS to the geometry column AND say what kind of geometry this represents. We won;t work with WKT here, but it's important to know what WKT is. 
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.9\textwidth]{Fig_14_imported_csv.png}
+    \label{fig13}
+    \caption{View of QGIS Project after importing a text file called "Pichincha\-GEOROC. Right clicking on this layer, selecting Properties, and navigating to the "Information" table let's us see that despite appearing like a Vector file on the map canvas, the data is still stored as a text file. We need to convert this data to a different format to interact with it in a meaningful way.}
+\end{figure}
+
+Right clicking on your imported text file and selecting "Properties" allows you to inspect the relevant features of your newly imported text file (Figure 14). If you follow the "Point Coordinates," Geometry option, you may be confused to find that, despite the points in your file plotting on your map canvas (orange circles in Figure 14), you can't interact as you would with a normal shapefile. For example, you can't edit the existing points, or add new points. The reason for this is because \textbf{an imported Point Coordinate text file, despite looking like vector data, is imported as a text file layer without additional processing}. This data format has very limited applicability in common geospatial operations, and many new users will be stumped as to why their newly imported data isn't working as intended. The solution to this issue involves an operation we will use a lot in these exercises: the \textbf{"Export Layer as.."} dialogue. 
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.9\textwidth]{Fig_15_saving_csv.png}
+    \label{fig13}
+    \caption{Delimited text file import menu. Tables of CSV, TXT, Tab-separated, and most other spreadsheet formats can be read into QGIS and have a spatial dimension given to them using this menu. Details of menu options explained in text.}
+\end{figure}
+
+To bring this menu up, select the text file of interest (e.g. Pichincha\_GEOROC in Figure 15) and right click on it. Scroll down to the bottom of the menu that appears, and select "Export" followed by "Save Feature As..." which brings up the menu you see in Figure 15. This menu has a lot of options, some of which we will explore in more detail later. For now, the options I want you to focus on are, first and foremost, the "Format" dropdown. There's no rule that says your imported text file, which in this case has a point geometry, needs to be in any prescribed format. The two most likely choices here are "ESRI Shapefile" and "Geopackage," following the discussion in Section 6.1. Once you select the format you'd like, click the ellipsis next to "File name," and navigate to the folder in your hard drive where you want to store the file. Select a name in this menu, and that name will be transcribed into the "Layer name" field in the "Save feature as" dialogue. Note: \textbf{Layer name(s) can ALWAYS be different from the actual file name.} This will come in handy as we seek to organize our work space. You likely won't need to the change the Encoding or Field options, but note that when saving this text file to a new vector layer, you have the option to "forget" certain attribute fields (you do this by deselecting a particular field). Finally, make sure you specify the "Geometry" in question. In this case, we know the records plot as points following the "Point Coordinate," option we choose when importing the data. Select "Ok" to make your conversion final. If you have the "Add saved file to map" option checked, your identical looking vector formatted table will instantly be added, and will tend to be plotted above the delimited text layer on the canvas. This Export process is something we will do with a number of different layers through our exercise. But at last, we are done with Data Import! Let's move on to taking some of our newly imported data, and decide what projection system to use. 
 
 \section{Defining Coordinate Systems and Projections}
 

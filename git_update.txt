@@ -2,4 +2,4 @@ cd QGIS-Live-Demo-Guide
 git checkout master && git pull
 cd ..
 git add QGIS-Live-Demo-Guide
-git commit -m "updating submodule to latest"
+git commit -m "updating submodule: Almost done section 8"

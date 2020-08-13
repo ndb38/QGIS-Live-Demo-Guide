@@ -218,6 +218,10 @@ All you need to do to fix this issue is to click on the files that are throwing 
     \caption{Project file directory and options. This menu is from the "Properties," option, accessed from the "Project" drop-down in the main menu bar.}
 \end{figure}
 
+\section{Exercise 1}
+
+SCOPE
+
 \section{Finding GIS Data}
 
 After identifying your research question, installing QGIS and relevant plugins, and familiarizing yourself with the interface, you will probably be left staring at the screen, wondering: where do I go from here? This initial paralysis is understandable. Despite all the wonderful features of QGIS we are going to use to understand Guagua Pichincha, there's no road map readily available on where to go to find the data you need. We are faced with two problems when thinking about what data we need. The first problem is the classic, "I have data, but how do I get it in to GIS?" This is one of the most common questions I get asked. Never fear; I will address this problem in great detail in the next section. More immediately, we need to co consider our non-geological needs. Specifically, our need for supporting information to achieve the stated goals of this exercise. What do I mean by supporting information? To take our research question seriously, we need a lot of information whose source and scope may not be immediately obvious. This information includes the spatial location and scale of the city of Quito itself (infrastructure, buildings, municipal boundaries, population statistics, etc. ) and the surrounding environment (weather, topography, hydrology, etc.). 
@@ -357,11 +361,13 @@ But these are limited exceptions to one very important general rule: \textbf{The
 
 \subsection{Defining Coordinate Systems and Projections}
 
-\textbf{Having already decided what the scope of our GIS project is, our priority is spatially referencing all of our data using a common, locally accurate reference system.} Keep in mind that our research question concerns a regional study of Guagua Pichincha and the surrounding Quito metropolitan area in Ecuador, South America. Following the official QGIS User guide (\url{https://docs.qgis.org/3.10/en/docs/user_manual/working_with_projections/working_with_projections.html}), a CRS is, "...a method of associating numerical coordinates with a position on the surface of the Earth." These numerical coordinates can be latitude and longitude (measured in degrees), as in our CSV import example (Section 6.3), X \& Y, or Easting and Northing (both X/Y and E/N usually measured in meters). The surface of the Earth in this case is given by a reference system, or a \textbf{datum.} 
+\textbf{Having already decided what the scope of our GIS project is, our priority is spatially referencing all of our data using a common, locally accurate reference system.} Keep in mind that our research question concerns a regional study of Guagua Pichincha and the surrounding Quito metropolitan area in Ecuador, South America. Following the official QGIS User guide (\url{https://docs.qgis.org/3.10/en/docs/user_manual/working_with_projections/working_with_projections.html}), a CRS is, "...a method of associating numerical coordinates with a position on the surface of the Earth." These numerical coordinates can be spherical like latitude and longitude (measured in degrees) as in our CSV import example (Section 6.3) - in this case the CRS is called a \textbf{Geographic Coordinate System (GCS)}. Alternatively, the CRS can have linear units, like X \& Y, or Easting and Northing (both X/Y and E/N usually measured in meters) - in this case, our CRS is a \textbf{Projected Coordinate System (PCS)}. In both cases, the surface of the Earth is given by a reference system, or a \textbf{datum.} 
 
-There are several major datum's, but thanks to global cooperation following the advent of the global positioning system (GPS) in the mid 1980's, these datum's are all almost universally interchangeable. Where we are working in the Western Hemisphere, the US-designed GRS80/WGS84 is the most common. Increasingly, this datum dominates more global geospatial applications, but alternative datum's are completely valid and are widely used in regions like Europe (e.g. ETRS89). QGIS handles datum's using the PROJ projection library, which is a workhorse open source reference of thousands of existing CRS' (see \url{https://proj.org}). Reference systems are called using shorthand codes, defined by the European Petroleum Search Groups (EPSG) standard practices. For example, the WGS84 global lat/long CRS uses to EPSG code "EPSG:4326." In the various CRS dialogues in QGIS, this code is the main label used to organize CRS'. 
+There are several major datum's, but thanks to global cooperation following the advent of the global positioning system (GPS) in the mid 1980's, these datum's are all almost universally interchangeable. Where we are working in the Western Hemisphere, the US-designed GRS80/WGS84 is the most common. Increasingly, this datum dominates more global geospatial applications, but given that it is centered on North America, it may not be useful for all applications. Specifically, WGS84 builds in the tectonic and isostatic features of the North American plate. Thus, using WGS84 outside North American carries the risk of increasing distortion, as other plates may not be moving at the same rate or equate to the same gravitational equipotential surface as North America. An alternative for use in Europe is ETRS89, and some countries and regions have their own datums. \textbf{Your choice of datum is user and project specific, and should be informed by common sense and local expertise.} QGIS handles datum's using the PROJ projection library, which is a workhorse open source reference of thousands of existing CRS' (see \url{https://proj.org}). Reference systems are called using shorthand codes, defined by the European Petroleum Search Groups (EPSG) standard practices. For example, the WGS84 global lat/long GCS uses to EPSG code "EPSG:4326." In the various CRS dialogues in QGIS, this code is the main label used to organize CRS'. 
 
-Thankfully, given the fact that so many datum's are interchangeable, we can select GRS80 is our baseline, and move on to the much more Given our very local focus on the area in and around Guagua Pichincha, ideally we would pick an Ecuadorian CRS. Specifically, we need a CRS that is built for regional scale analysis. Note that in this context, "regional," means at a municipal or province scale in the country of Ecuador. This semantic preference is in contrast to a "local" scale CRS, which would mean confined to one small section of G.P. (e.g. a particular drainage basin), or "national," which would encompass the whole country. Now, in practice, CRS' can be designed to encompass all three of these scales.  But defining this need, alongside our original research question and goal, will help us in picking a CRS. To do so, we can look to several resources (1) past GIS studies in the region; these are probably your best bet, as they will be based on local knowledge and the expertise of trained Ecuadorian GIS professionals, or (2) the website \url{http://www.epsg-registry.org}. This latter is where I went to find a CRS for our project, as I couldn't find much on the few Ecuadorian geological studies I consulted (note: my ability to interact with Ecuadorian geological literature is limited by my lack of fluency in Spanish; a Spanish-fluent GIS user would likely be able to get everything they need off of relevant Ecuadorian websites). Searching for Ecuador, and inspecting the vast array of CRS' that appear, I decided to use \textbf{SIRGAS 2000/UTM Zone 17S}. My reasoning for this selection follows a few lines of logic. outlined below. However, I want to emphasize that \textbf{there is no wrong CRS choice, so long as we document the CRS and acknowledge its limitations and errors:}
+Thankfully, WGS84 works well in both South and North America, so we can select GRS80 is our baseline, and move on to the much more rich and complex topic of which PCS we will use. Given our very local focus on the area in and around Guagua Pichincha, ideally we would pick an Ecuadorian PCS. Specifically, we need a PCS that is built for regional scale analysis. Note that in this context, "regional," means at a municipal or province scale in the country of Ecuador. This semantic preference is in contrast to a "local" scale PCS, which would mean confined to one small section of G.P. (e.g. a particular drainage basin), or "national," which would encompass the whole country. Now, in practice, PCS' can be designed to encompass all three of these scales.  But defining this need, alongside our original research question and goal, will help us in picking a PCS. Before moving on, you may wonder why we would take so much time out of out busy lives to think about the coordinate system we are going to use for our analysis. The answer: \textbf{Our data is only as good as the PCS we select to reference it to.} Our PCS essentially provides the dimensions of all our spatial analyses and products. You wouldn't report a car travelling past you was driving at 100. You need to specify a unit, and if we stop with our data referenced to WGS84, we haven't properly converted, or \textbf{projected} our data into 2D, linear units like meters. So to imbue our work with physical meaning, we can't get by without a PCS.
+
+To do so, we can look to several resources (1) past GIS studies in the region; these are probably your best bet, as they will be based on local knowledge and the expertise of trained Ecuadorian GIS professionals, or (2) the website \url{http://www.epsg-registry.org}. This latter is where I went to find a PCS for our project, as I couldn't find much on the few Ecuadorian geological studies I consulted (note: my ability to interact with Ecuadorian geological literature is limited by my lack of fluency in Spanish; a Spanish-fluent GIS user would likely be able to get everything they need off of relevant Ecuadorian websites). Searching for Ecuador, and inspecting the vast array of PCS' that appear, I decided to use \textbf{SIRGAS 2000/UTM Zone 17S}. My reasoning for this selection follows a few lines of logic. outlined below. However, I want to emphasize that \textbf{there is no wrong PCS choice, so long as (1) our data falls within the chosen PCS' bounds, (2) we document the PCS we chose, and (3) we acknowledge its limitations and errors:}
 
 \begin{itemize}
     \item Following the EPSG repository query, I googled what a common CRS for work in Quito Ecuador would be. Several different GIS websites, including a companion EPSG site like \url{https://epsg.io/?q=Ecuador} emphasize how widespread SIRGAS 2000/UTM Zone 17S for Eastern South America. 
@@ -370,17 +376,38 @@ Thankfully, given the fact that so many datum's are interchangeable, we can sele
     \item The measured accuracy of SIRGAS is 1.0m - this is good for a CRS, and means we won't have to worry about errors coming from our CRS choice too much (see Error Propagation section for more details). See: \url{https://epsg.io/31977}
 \end{itemize}
 
-With that choice made, we need to amke sure our project is set up for success. 
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.95\textwidth]{FIg_16_proj_crs.png}
+    \label{fig13}
+    \caption{CRS dialogue for our Guagua Pichincha project. This menu is opened by selecting "Project" from the top menu drop down, and then selecting "Properties." Relevant sections discussed in the text are th CRS selection windows, the map view of the valid projection area, and the Datum Transformations, which will be discussed more in the next section.}
+\end{figure}
 
-\subsection{Reprojection}
-
-Now that we have discussed the projection system we are going to use in this project, we need to bring our data up to speed!
-
-To make the Datu transform work, you have to add this line of PROJ commands to your CRS "Transformations" options: 
+With that choice made, we need to make sure our project is set up for success. While we will also configure the CRS for every layer individually - a process called \textbf{reprojection} - we cna save ourselves some time and trouble if, upon opening a new project, we give our project file its own CRS. The dialogue for this menu can be found under the "Project" > "Properties" menu (see Figure 16). Since we are now set on SIRGAS 2000/UTM Zone 17S, we can search either it's name EPSG code (31977) using the top search bar. Once we select it, the middle panel will display some WKT geometric definitions of the datum, meridian, projection, units, extent, and PROJ4 code. Next to the WKT block is a map, which in Figure 16 draws two boxes. The first red one shows the useable extent of the selected PCS. For SIRGAS 2000/17S, this is a narrow longitudinal strip that captures most of Ecuador. If any layers have already been added to the map, a second purple box will be drawn showing your current \textbf{map extent} bounding box. As I mentioned earlier, the vast majority of your data (purple) needs to be captured in you PCS (red), otherwise massive distortions can be introduced. Try plotting something from England using SIRGAS 2000 and see what your map looks like! The final option we are prompted to select is a Datum Transformation. Now unless you know the area very well, you will either have to google what to do with this, or wait for QGIS to prompt you. But suffice to say, you can prep end the types of transformations that take one CRS and convert it to your project CRS. For the example in Figure 16, my transformations use a Transverse Mercator projection to transform WGS84 to SIRGAS 2000. If you want to add your own version of this path, click the plus sign, enter the two CRS' respective EPSG codes, and type the following code into the "Operation" column:
 
 \begin{lstlisting}[language=bash]
     +proj=pipeline +step +proj=unitcon vert +xy_in=deg +xy_out=rad +step +proj=utm +zone=17 +south +ellps=GRS80
 \end{lstlisting}
+
+\subsection{Reprojection}
+
+Now that we have discussed the projection system we are going to use in this project, we need to bring our data up to speed! As mentioned earlier, we do this using re-projection tools. Given that there are two main data formats in QGIS with vastly different data storage and rendering structures, there is a re-projection tools specific to raster and vector files. Vectors are the easy case, so we'll start there. Along the top row of dropw down menus, scroll over to the "Vector," menu. Scroll further down, and mouse over "Data Management Tools." In this menu, you will select the tool "Reproject Layer." The dialogue is simple (Figure 17), and simply asks you to select (1) a vector format file from the Layer browser, (2) a Target CRS (SIRGAS 2000/UTM Zone 17S), and (3) a name/file location for the output. The tool may prompt you to select a transformation if you haven't prepended transformation settings as shown in Figure 16; in that case, select the option given to you. If QGIS tells you it isn't sure how to transform your data, you are probably using an old or quirky PCS. Don't panic! Google is your friend here, and you can usually find a string of PROJ4 code that will solve your problem. After running, the tool should automatically add the layer to your map and "Layer" browser. If it doesn't appear, navigate to the file "Browser," and drill down through your hard drive until you find the file you just made. A final note: after creating the vector file version of a CSV, you will probably want to re-project it using this same tool. 
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.95\textwidth]{Fig_18_reproj_vector.png}
+    \label{fig13}
+    \caption{CRS dialogue for our Guagua Pichincha project. This menu is opened by selecting "Project" from the top menu drop down, and then selecting "Properties." Relevant sections discussed in the text are th CRS selection windows, the map view of the valid projection area, and the Datum Transformations, which will be discussed more in the next section.}
+\end{figure}
+
+The raster re-projection tool has many more options, owing to the resolution, scaling, and warping that can have a much greater impact on re-projected raster vs. vector files. To find this tool, mouse over the "Raster drow down," next to the "Vector," menu you just used. Rasters have their projection tools grouped under a menu helpfully called "Projections." \textbf{DO NOT use the "Define Projection" tool for any data that has a CRS already defined. If your raster lacks a CRS, in most cases you'll need to georeference it (Section 10).} "Extract projection," can be used to create a .prj file containing the CRS of a given raster; this isn't particularly useful for us, but can save time if you need projection references for a model input. However, for our purposes we can ignore most of these options. After selecting our Input Layer, we need to indicate a Source CRS (WGS84 for our SRTM DEM's) followed by a Taregt CRS (SIRGAS 2000/UTM Zone 17S). The "Resampling Method" drop down can be left as Nearest neighbor, but if you know anything about remote sensing, you know that these options let you set the optimal smoothing parameters for the transformation that's about to warp your raster. Thus, if you know what you are doing, you are free to select a resampling method suitable to your data. Otherwise, Nearest neighbor is just fine. You can ignore all other inputs, and save the file name \& location that you want under the "Reprojected" dialogue. These tools will be regularly used as you import data. For our project, all the data we download from GeoData \@ Tufts, as well as our DEMs need to be re-projected from WGS84 before they can be use. 
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.95\textwidth]{Fig_17_reproj_raster.png}
+    \label{fig13}
+    \caption{CRS dialogue for our Guagua Pichincha project. This menu is opened by selecting "Project" from the top menu drop down, and then selecting "Properties." Relevant sections discussed in the text are th CRS selection windows, the map view of the valid projection area, and the Datum Transformations, which will be discussed more in the next section.}
+\end{figure}
 
 \section{Setting Up Workspace}
 
@@ -402,11 +429,55 @@ To make the Datu transform work, you have to add this line of PROJ commands to y
 
 \subsection{Vector}
 
-\subsection{Digital Elevation Models (DEMs)}
+\subsection{Raster}
+
+\section{Creating a Map: Layout Manager}
+
+\section{Exercise 2}
+
+\section{Making a Map from Minimal Spatial Data}
+
+\subsection{Georeferencing Basemap}
+
+\subsection{Importing CSV with "No Geometry"}
+
+\subsection{Creating a Layer}
+
+\subsection{Spatial Joins}
+
+\section{Geostatistics}
+
+\subsection{Interpolation: Hydrogeochemistry}
+
+\subsection{Zonal Statistics: Landslides}
+
+\section{Intermediate Vector Symbology}
+
+\subsection{Symbol Levels}
+
+\subsection{Draw Effects}
+
+\subsection {Point Layer Heatmap}
+
+\section{Advanced Raster Symbology}
+
+\subsection{Hillshade}
+
+\subsection{Blending}
 
 \subsection{3D View}
 
-\section{Creating a Map: Layout Manager}
+\section{Online Database Connections}
+
+\subsection{WMS}
+
+\subsection{WFS}
+
+\section{Beginner Python in QGIS}
+
+\subsection{The Interface}
+
+\subsection{Running our First Script}
 
 \section{Final Thoughts}
 
